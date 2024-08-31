@@ -23,4 +23,12 @@ public class LinkResponse {
     private String shortenedUrl;
     private String qrCodeUrl;
     private LocalDateTime urlCreatedIn;
+
+    public LinkResponse(Long id, String longUrl, String shortenedUrl, String qrCodeUrl, LocalDateTime urlCreatedIn) {
+        this.id = id;
+        this.longUrl = longUrl;
+        this.shortenedUrl = shortenedUrl;
+        this.qrCodeUrl = qrCodeUrl;
+        this.urlCreatedIn = urlCreatedIn;
+    }
 }
