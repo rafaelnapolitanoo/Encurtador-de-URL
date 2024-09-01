@@ -75,4 +75,6 @@ public class Link {
     public void setUrlCreatedIn(LocalDateTime urlCreatedIn) {
         this.urlCreatedIn = urlCreatedIn;
     }
+
+
 }

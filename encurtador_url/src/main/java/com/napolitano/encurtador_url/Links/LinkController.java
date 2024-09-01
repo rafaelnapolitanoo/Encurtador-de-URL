@@ -1,26 +1,23 @@
 package com.napolitano.encurtador_url.Links;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
 @RestController
-@RequestMapping("/encurtar_link")
+@RequestMapping("/encurtar")
 public class LinkController {
 
-    private LinkService linkService;
-    public LinkController(LinkService linkService){
+    private final LinkService linkService;
+
+    public LinkController(LinkService linkService) {
         this.linkService = linkService;
     }
 
     @PostMapping
     public ResponseEntity<LinkResponse> gerarUrlEncurtada(@RequestBody Map<String, String> request) {
-
         String longUrl = request.get("longUrl");
         Link link = linkService.encurtarUrl(longUrl);
 
@@ -35,4 +32,16 @@ public class LinkController {
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/r/{shortenedUrl}")
+    public void redirectLink(@PathVariable String shortenedUrl, HttpServletResponse response) throws Exception {
+        Link link = linkService.obterUrlOriginal(shortenedUrl);
+
+        if (link != null) {
+            response.sendRedirect(link.getLongUrl()); // Redirecionar para a URL longa
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
 }
+

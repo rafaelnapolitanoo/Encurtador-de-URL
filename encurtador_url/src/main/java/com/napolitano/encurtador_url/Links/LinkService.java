@@ -18,34 +18,36 @@ import java.time.LocalDateTime;
 @Service
 public class LinkService {
 
+    private final LinkRepository linkRepository;
 
-    private LinkRepository linkRepository;
-    public LinkService(LinkRepository linkRepository){
-        this.linkRepository= linkRepository;
+    public LinkService(LinkRepository linkRepository) {
+        this.linkRepository = linkRepository;
     }
 
-    // gerar uma url aleatoria
+    // Gerar uma URL aleatória
     public String generateSortedUrl() {
-        return RandomStringUtils.randomAlphanumeric(5,10);
+        return RandomStringUtils.randomAlphanumeric(5, 10);
     }
 
-    // encurtar url
+    // Encurtar URL
     public Link encurtarUrl(String longUrl) {
         Link link = new Link();
         link.setLongUrl(longUrl);
         link.setShortenedUrl(generateSortedUrl());
         link.setUrlCreatedIn(LocalDateTime.now());
-        link.setQrCodeUrl("QR code indisponivel no momento");
+        link.setQrCodeUrl("QR code indisponível no momento");
 
         return linkRepository.save(link);
     }
 
+    // Obter a URL original a partir da URL encurtada
     public Link obterUrlOriginal(String shortenedUrl) {
         try {
-            return  linkRepository.findByLongUrl(shortenedUrl);
+            return  linkRepository.findByShortenedUrl(shortenedUrl);
         } catch (Exception exception){
             throw new RuntimeException("Url not found", exception);
         }
 
     }
 }
+
